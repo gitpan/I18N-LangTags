@@ -1,25 +1,26 @@
 #
-# Time-stamp: "1998-04-02 14:44:13 MST sburke@alf8.speech.cs.cmu.edu"
+# Time-stamp: "1998-10-31 14:36:43 MST"
 # Sean M. Burke <sburke@netadventure.net>
 #
 ###########################################################################
 
 package I18N::LangTags;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $VERSION);
+use vars qw(@ISA @EXPORT @EXPORT_OK $Debug $VERSION);
 require 5.000;
 require Exporter;
+$Debug = 0;
 @ISA = qw(Exporter);
 @EXPORT = qw();
 @EXPORT_OK = qw(is_language_tag same_language_tag
-             extract_language_tags
-             similarity_language_tag is_dialect_of);
+                extract_language_tags
+                similarity_language_tag is_dialect_of);
 
-$VERSION = "0.07";
+$VERSION = "0.08";
 
 =head1 NAME
 
-I18N::LangTags - routines for dealing with RFC1766-style language tags
+I18N::LangTags - functions for dealing with RFC1766-style language tags
 
 =head1 SYNOPSIS
 
@@ -27,12 +28,12 @@ I18N::LangTags - routines for dealing with RFC1766-style language tags
                           extract_language_tags
                           similarity_language_tag is_dialect_of);
 
-...or whatever of those routines you want to import.  (Those are
-all the exportable routines -- you're free to import only some,
-or none at all.)
+...or whatever of those function you want to import.  Those are
+all the exportable functions -- you're free to import only some,
+or none at all.  By default, none are imported.
 
-If you don't import any of these routines, assume a C<&I18N::LangTags::>
-in front of all the routine names in the following examples.
+If you don't import any of these functions, assume a C<&I18N::LangTags::>
+in front of all the function names in the following examples.
 
 =head1 DESCRIPTION
 
@@ -40,12 +41,11 @@ Language tags are a formalism, described in RFC 1766, for declaring
 what language form (language and possibly dialect) a given chunk of
 information is in.
 
-This library provides routines for common tasks involving language
+This library provides functions for common tasks involving language
 tags as they are needed in a variety of protocols and applications.
 
 Please see the "See Also" references for a thorough explanation
 of how to correctly use language tags.
-
 
 =over
 
@@ -63,7 +63,7 @@ sub regularize_language_tag {
 
 ###########################################################################
 
-=item * C<is_language_tag($lang1)>
+=item * the function is_language_tag($lang1)
 
 Returns true iff $lang1 is a formally valid language tag.
 
@@ -105,7 +105,7 @@ sub is_language_tag {
 
 ###########################################################################
 
-=item * C<extract_language_tags($whatever)>
+=item * the function extract_language_tags($whatever)
 
 Returns a list of whatever looks like formally valid language tags
 in $whatever.  Not very smart, so don't get too creative with
@@ -141,7 +141,7 @@ sub extract_language_tags {
 
 ###########################################################################
 
-=item * C<same_language_tag($lang1, $lang2)>
+=item * the function same_language_tag($lang1, $lang2)
 
 Returns true iff $lang1 and $lang2 are acceptable variant tags
 representing the same language-form.
@@ -164,7 +164,7 @@ sub same_language_tag {
 
 ###########################################################################
 
-=item * C<similarity_language_tag($lang1, $lang2)>
+=item * the function similarity_language_tag($lang1, $lang2)
 
 Returns an integer representing the degree of similarity between
 tags $lang1 and $lang2 (the order of which does not matter), where
@@ -217,10 +217,10 @@ sub similarity_language_tag {
 
 ###########################################################################
 
-=item * C<is_dialect_of($lang1, $lang2)>
+=item * the function is_dialect_of($lang1, $lang2)
 
-Returns true iff language tag $lang1 represents a subdialect of language
-tag $lang2.
+Returns true iff language tag $lang1 represents a subdialect of
+language tag $lang2.
 
 B<Get the order right!  It doesn't work the other way around!>
 
@@ -268,35 +268,31 @@ sub is_dialect_of {
 
 =back
 
+=head1 NOTE
+
+This library may (probably will) need ammending if/when RFC1766 is
+superceded.
+
 =head1 SEE ALSO
 
-=over
+* RFC 1766, C<ftp://ftp.isi.edu/in-notes/rfc1766.txt>, "Tags for the
+Identification of Languages".
 
-=item RFC 1766,
-C<ftp://ftp.isi.edu/in-notes/rfc1766.txt>,
-"Tags for the Identification of Languages".
+* RFC 2277, C<ftp://ftp.isi.edu/in-notes/rfc2277.txt>, "IETF Policy on
+Character Sets and Languages".
 
-=item RFC 2277,
-C<ftp://ftp.isi.edu/in-notes/rfc2277.txt>,
-"IETF Policy on Character Sets and Languages".
+* RFC 2231, C<ftp://ftp.isi.edu/in-notes/rfc2231.txt>, "MIME Parameter
+Value and Encoded Word Extensions: Character Sets, Languages, and
+Continuations".
 
-=item RFC 2231,
-C<ftp://ftp.isi.edu/in-notes/rfc2231.txt>,
-"MIME Parameter Value and Encoded Word Extensions:
-Character Sets, Languages, and Continuations".
+* Locale::Codes, in
+C<http://www.perl.com/CPAN/modules/by-module/Locale/>
 
-=item Locale::Codes
-C<http://www.perl.com/CPAN/modules/by-module/Locale/Locale-Codes-1.00.tar.gz>
-or later
-
-=item ISO 639,
-"Code for the representation of names of languages",
+* ISO 639, "Code for the representation of names of languages",
 C<http://www.indigo.ie/egt/standards/iso639/iso639-1-en.html>
 
-=item IANA list of registered languages (hopefully up-to-date),
+* The IANA list of registered languages (hopefully up-to-date),
 C<ftp://ftp.isi.edu/in-notes/iana/assignments/languages/>
-
-=back
 
 =head1 COPYRIGHT
 

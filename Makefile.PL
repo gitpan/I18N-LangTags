@@ -4,4 +4,16 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     'NAME'	=> 'I18N::LangTags',
     'VERSION_FROM' => 'LangTags.pm', # finds $VERSION
+    'dist'        => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
 );
+
+package MY;
+
+sub libscan
+{ # Determine things that should *not* be installed
+    my($self, $path) = @_;
+    return '' if $path =~ m/~/;
+    $path;
+}
+
+__END__
