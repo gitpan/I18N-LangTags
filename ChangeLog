@@ -1,6 +1,19 @@
 Revision history for Perl module I18N::LangTags.
-                                        Time-stamp: "2001-05-29 21:48:49 MDT"
+                                        Time-stamp: "2001-06-20 01:52:29 MDT"
 
+2001-06-20  Sean M. Burke  sburke@cpan.org
+	
+	* Release 0.24
+
+	* I18N::LangTags -- some elaborate hacks to make us
+	recognize legacy aliases like no-nyn == nn.
+	Added panic_languages().
+	Added :ALL export tag.
+	Minor docs fixes, and spiffing up test.pl.
+	
+	* I18N::LangTags::List -- minor corrections; added
+	a few aliases.
+	
 2001-05-29  Sean M. Burke  sburke@cpan.org
 
 	* Release 0.23

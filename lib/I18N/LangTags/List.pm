@@ -1,10 +1,10 @@
 
 require 5;
 package I18N::LangTags::List;
-#  Time-stamp: "2001-05-29 21:47:11 MDT"
+#  Time-stamp: "2001-05-27 19:55:19 MDT"
 use strict;
 use vars qw(%Name $Debug $VERSION);
-$VERSION = '0.23';
+$VERSION = '0.24';
 # POD at the end.
 
 #----------------------------------------------------------------------
@@ -172,7 +172,7 @@ ISO 3166 country code C<.jp> for Japan.
 =head1 LIST OF LANGUAGES
 
 The first part of each item is the language tag, between
-{...} and in italic characters.  It
+{...}.  It
 is followed by an English name for the language or language-group.
 Language tags that I judge to be not for general use, are bracketed.
 
@@ -325,6 +325,8 @@ NOT Ruthenian!
 
 =item {bn} : Bengali
 
+eq Bangla.
+
 =item [{ber} : Berber (Other)]
 
 =item {bho} : Bhojpuri
@@ -336,6 +338,8 @@ NOT Ruthenian!
 =item {bin} : Bini
 
 =item {bi} : Bislama
+
+eq Bichelamar.
 
 =item {bs} : Bosnian
 
@@ -785,7 +789,7 @@ eq Greenlandic "Eskimo"
 
 =item {kn} : Kannada
 
-NOT Canadian!
+eq Kanarese.  NOT Canadian!
 
 =item {kau} : Kanuri
 
@@ -858,6 +862,8 @@ NOT Lamba!
 NOT Lahnda!
 
 =item {lo} : Lao
+
+eq Laotian.
 
 =item {la} : Latin
 
@@ -934,6 +940,8 @@ NOT Mandarin!
 =item {man} : Mandingo
 
 =item {mni} : Manipuri
+
+eq Meithei.
 
 =item [{mno} : Manobo languages]
 
@@ -1129,6 +1137,8 @@ eq Farsi.  eq Iranian.
 (Historical)
 
 =item {pon} : Pohnpeian
+
+NOT Pompeiian!
 
 =item {pl} : Polish
 
@@ -1488,7 +1498,7 @@ eq Washoe
 
 =item {wo} : Wolof
 
-=item {x-...} : Unregistered (Private Use)
+=item {x-...} : Unregistered (Semi-Private Use)
 
 "x-" is a prefix for language tags that are not registered with ISO
 or IANA.  Example, x-double-dutch
