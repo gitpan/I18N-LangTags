@@ -6,3 +6,4 @@ README
 lib/I18N/LangTags.pm
 lib/I18N/LangTags/List.pm
 t/01test.t
+t/02decency.t
