@@ -1,5 +1,5 @@
 README for I18N::LangTags
-                                        Time-stamp: "1998-12-15 00:03:44 MST"
+                                        Time-stamp: "1999-03-07 11:46:32 MST"
 
 			    I18N::LangTags
 
@@ -11,15 +11,9 @@ what language form (language and possibly dialect) a given chunk of
 information is in.
 
 This library provides functions for common tasks involving language
-tags as they are needed in a variety of protocols and applications.
-
-The functions it currently provides are:
-	is_language_tag($lang1)
-	extract_language_tags($whatever)
-	same_language_tag($lang1, $lang2)
-	similarity_language_tag($lang1, $lang2)
-	is_dialect_of($lang1, $lang2)
-        super_languages($lang1)
+tags (notably the extraction of them, comparing them, and testing the
+formal validity of them) as is needed in a variety of protocols and
+applications.
 
 See the POD for more information.
 

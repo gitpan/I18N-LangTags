@@ -1,5 +1,5 @@
 #
-# Time-stamp: "1999-03-06 19:31:03 MST"
+# Time-stamp: "1999-03-07 11:45:11 MST"
 # Sean M. Burke <sburke@netadventure.net>
 #
 ###########################################################################
@@ -19,7 +19,7 @@ $Debug = 0;
                 encode_language_tag
                );
 
-$VERSION = "0.11";
+$VERSION = "0.12";
 
 =head1 NAME
 
