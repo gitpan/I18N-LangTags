@@ -1,5 +1,5 @@
 README for I18N::LangTags
-                                        Time-stamp: "1999-03-07 11:46:32 MST"
+                                        Time-stamp: "2000-05-13 22:14:23 MDT"
 
 			    I18N::LangTags
 
@@ -44,7 +44,7 @@ with the 'perldoc' utility.  See ChangeLog for recent changes.
 SUPPORT
 
 Questions, bug reports, useful code bits, and suggestions for
-I18N::LangTags should just be sent to me at sburke@netadventure.net
+I18N::LangTags should just be sent to me at sburke@cpan.org
 
 
 AVAILABILITY
@@ -56,7 +56,7 @@ Comprehensive Perl Archive Network (CPAN).  Visit
 
 COPYRIGHT
 
-Copyright 1998, Sean M. Burke <sburke@netadventure.net>, all rights
+Copyright 1998-2000, Sean M. Burke <sburke@cpan.org>, all rights
 reserved.
 
 This library is free software; you can redistribute it and/or modify

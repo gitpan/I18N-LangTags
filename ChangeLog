@@ -1,5 +1,5 @@
 Revision history for Perl module I18N::LangTags.
-                                        Time-stamp: "1999-03-06 19:40:39 MST"
+                                        Time-stamp: "2000-05-13 22:18:14 MDT"
 
 1998-04-02 Sean M. Burke  sburke@netadventure.net
 
@@ -28,3 +28,9 @@ Revision history for Perl module I18N::LangTags.
           similarity_language_tag, is_dialect_of,
 	  locale2language_tag, alternate_language_tags, and
 	  encode_language_tag
+
+2000-05-13  Sean M. Burke  sburke@cpan.org
+
+	* Release 0.13
+
+	* Just noting my new email address.

@@ -1,13 +1,11 @@
-#
-# Time-stamp: "1999-03-07 11:45:11 MST"
-# Sean M. Burke <sburke@netadventure.net>
-#
-###########################################################################
 
+# Time-stamp: "2000-05-13 22:12:55 MDT"
+# Sean M. Burke <sburke@cpan.org>
+
+require 5.000;
 package I18N::LangTags;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $Debug $VERSION);
-require 5.000;
 require Exporter;
 $Debug = 0;
 @ISA = qw(Exporter);
@@ -19,7 +17,7 @@ $Debug = 0;
                 encode_language_tag
                );
 
-$VERSION = "0.12";
+$VERSION = "0.13";
 
 =head1 NAME
 
@@ -587,14 +585,14 @@ C<ftp://ftp.isi.edu/in-notes/iana/assignments/languages/>
 
 =head1 COPYRIGHT
 
-Copyright (c) 1998,1999 Sean M. Burke. All rights reserved.
+Copyright (c) 1998,1999,2000 Sean M. Burke. All rights reserved.
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
 =head1 AUTHOR
 
-Sean M. Burke C<sburke@netadventure.net>
+Sean M. Burke C<sburke@cpan.org>
 
 =cut
 
