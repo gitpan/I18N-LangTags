@@ -1,5 +1,5 @@
 Revision history for Perl module I18N::LangTags.
-                                        Time-stamp: "1998-12-14 23:58:27 MST"
+                                        Time-stamp: "1999-03-06 19:40:39 MST"
 
 1998-04-02 Sean M. Burke  sburke@netadventure.net
 
@@ -14,9 +14,17 @@ Revision history for Perl module I18N::LangTags.
 	* Just changes in the docs and bundle -- no change
 	in functionality.
 
-
 1998-12-14  Sean M. Burke  sburke@netadventure.net
 
 	* Release 0.09
 
 	* Added function super_languages()
+
+1999-03-06  Sean M. Burke  sburke@netadventure.net
+
+	* Release 0.11
+
+	* Added functions
+          similarity_language_tag, is_dialect_of,
+	  locale2language_tag, alternate_language_tags, and
+	  encode_language_tag

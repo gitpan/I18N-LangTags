@@ -1,5 +1,5 @@
 #
-# Time-stamp: "1998-12-15 00:15:05 MST"
+# Time-stamp: "1999-03-06 19:31:03 MST"
 # Sean M. Burke <sburke@netadventure.net>
 #
 ###########################################################################
@@ -14,9 +14,12 @@ $Debug = 0;
 @EXPORT = qw();
 @EXPORT_OK = qw(is_language_tag same_language_tag
                 extract_language_tags super_languages
-                similarity_language_tag is_dialect_of);
+                similarity_language_tag is_dialect_of
+                locale2language_tag alternate_language_tags
+                encode_language_tag
+               );
 
-$VERSION = "0.09";
+$VERSION = "0.11";
 
 =head1 NAME
 
@@ -26,7 +29,10 @@ I18N::LangTags - functions for dealing with RFC1766-style language tags
 
     use I18N::LangTags qw(is_language_tag same_language_tag
                           extract_language_tags super_languages
-                          similarity_language_tag is_dialect_of);
+                          similarity_language_tag is_dialect_of
+                          locale2language_tag alternate_language_tags
+                          encode_language_tag
+                         );
 
 ...or whatever of those functions you want to import.  Those are
 all the exportable functions -- you're free to import only some,
@@ -50,16 +56,6 @@ of how to correctly use language tags.
 =over
 
 =cut
-
-sub regularize_language_tag {
-  #  For internal use.  Use only if you know what you're doing
-  my($tag) = uc($_[0]); # uc it
-  return undef unless &is_language_tag($tag);
-  # If it's not a language tag, it's regularized form is undef
-
-  $tag =~ s/^[xiXI]-//s; #lop off any leading x/i-
-  return $tag;
-}
 
 ###########################################################################
 
@@ -86,6 +82,9 @@ Returns true iff $lang1 is a formally valid language tag.
 =cut
 
 sub is_language_tag {
+
+  ## Changes in the language tagging standards may have to be reflected here.
+
   my($tag) = lc($_[0]);
 
   return 0 if $tag eq "i" or $tag eq "x";
@@ -121,6 +120,9 @@ what you want to feed it.
 =cut
 
 sub extract_language_tags {
+
+  ## Changes in the language tagging standards may have to be reflected here.
+
   my($text) = $_[0];
 
   return grep(!m/^[ixIX]$/s, # 'i' and 'x' aren't good tags
@@ -155,11 +157,23 @@ representing the same language-form.
    same_language_tag('x-kadara', 'x-kadar')   is FALSE
       (these are totally unrelated tags)
 
+C<same_language_tag> works by just seeing whether
+C<encode_language_tag($lang1)> is the same as
+C<encode_language_tag($lang2)>.
+
+(Yes, I know this function is named a bit oddly.  Call it historic
+reasons.)
+
 =cut
 
 sub same_language_tag {
-  return  &regularize_language_tag($_[0])
-       eq &regularize_language_tag($_[1]) ? 1 : 0;
+  my $el1 = &encode_language_tag($_[0]);
+  return 0 unless defined $el1;
+   # this avoids the problem of
+   # encode_language_tag($lang1) eq and encode_language_tag($lang2)
+   # being true if $lang1 and $lang2 are both undef
+
+  return $el1 eq &encode_language_tag($_[1]) ? 1 : 0;
 }
 
 ###########################################################################
@@ -195,8 +209,10 @@ without regard to case and to x/i- alternation.
 =cut
 
 sub similarity_language_tag {
-  my $lang1 = &regularize_language_tag($_[0]);
-  my $lang2 = &regularize_language_tag($_[1]);
+  my $lang1 = &encode_language_tag($_[0]);
+  my $lang2 = &encode_language_tag($_[1]);
+
+  # NB: (i-sil-...)?
 
   return undef if !defined($lang1) and !defined($lang2);
   return 0 if !defined($lang1) or !defined($lang2);
@@ -227,9 +243,6 @@ B<Get the order right!  It doesn't work the other way around!>
    is_dialect_of('en-US', 'en')            is TRUE
      (American English IS a dialect of all-English)
 
-   is_dialect_of('en-US', 'en')            is TRUE
-     (American English IS a dialect of all-English)
-
    is_dialect_of('fr-CA-joual', 'fr-CA')   is TRUE
    is_dialect_of('fr-CA-joual', 'fr')      is TRUE
      (Joual is a dialect of (a dialect of) French)
@@ -239,8 +252,9 @@ B<Get the order right!  It doesn't work the other way around!>
 
    is_dialect_of('fr', 'en-CA')            is FALSE
 
-   is_dialect_of('en', 'en'   )            is TRUE
-     (B<Note:> a degenerate case)
+   is_dialect_of('en',    'en'   )            is TRUE
+   is_dialect_of('en-US', 'en-US')            is TRUE
+     (B<Note:> these are degenerate cases)
 
    is_dialect_of('i-mingo-tom', 'x-Mingo') is TRUE
      (the x/i thing doesn't matter, nor does case)
@@ -249,8 +263,8 @@ B<Get the order right!  It doesn't work the other way around!>
 
 sub is_dialect_of {
 
-  my $lang1 = &regularize_language_tag($_[0]);
-  my $lang2 = &regularize_language_tag($_[1]);
+  my $lang1 = &encode_language_tag($_[0]);
+  my $lang2 = &encode_language_tag($_[1]);
 
   return undef if !defined($lang1) and !defined($lang2);
   return 0 if !defined($lang1) or !defined($lang2);
@@ -281,18 +295,19 @@ nothing (or just "i" or "x") is left.
    super_languages("i-cherokee")  is  empty-list, ()
     ...not ("i"), which would be illegal as well as pointless.
 
-Returns empty-list if $lang1 is not a valid language tag.
+If $lang1 is not a valid language tag, returns empty-list in
+a list context, undef in a scalar context.
 
 A notable and rather unavoidable problem with this method:
 "x-mingo-tom" has an "x" because the whole tag isn't an
 IANA-registered tag -- but super_languages('x-mingo-tom') is
-('x-mmingo') -- which isn't really right, since 'i-mingo' is
+('x-mingo') -- which isn't really right, since 'i-mingo' is
 registered.  But this module has no way of knowing that.  (But note
 that same_language_tag('x-mingo', 'i-mingo') is TRUE.)
 
 More importantly, you assume I<at your peril> that superordinates of
-$lang1 are mutually intelligible with $lang1.  Think REAL hard about
-how you use this.  YOU HAVE BEEN WARNED.
+$lang1 are mutually intelligible with $lang1.  Consider this
+carefully.
 
 =cut 
 
@@ -300,6 +315,10 @@ sub super_languages {
   my $lang1 = $_[0];
   return() unless defined($lang1) && &is_language_tag($lang1);
   my @l1_subtags = split('-', $lang1);
+
+  ## Changes in the language tagging standards may have to be reflected here.
+
+  # NB: (i-sil-...)?
 
   my @supers = ();
   foreach my $bit (@l1_subtags) {
@@ -313,12 +332,234 @@ sub super_languages {
 
 ###########################################################################
 
+=item * the function locale2language_tag($locale_identifier)
+
+This takes a locale name (like "en", "en_US", or "en_US.ISO8859-1")
+and maps it to a language tag.  If it's not mappable (as with,
+notably, "C" and "POSIX"), this returns empty-list in a list context,
+or undef in a scalar context.
+
+   locale2language_tag("en") is "en"
+
+   locale2language_tag("en_US") is "en-US"
+
+   locale2language_tag("en_US.ISO8859-1") is "en-US"
+
+   locale2language_tag("C") is undef or ()
+
+   locale2language_tag("POSIX") is undef or ()
+
+   locale2language_tag("POSIX") is undef or ()
+
+I'm not totally sure that locale names map satisfactorily to language
+tags.  Think REAL hard about how you use this.  YOU HAVE BEEN WARNED.
+
+=cut 
+
+sub locale2language_tag {
+  my $lang = $_[0];
+
+  return $lang if &is_language_tag($lang); # like "en"
+
+  $lang =~ tr<_><->;  # "en_US" -> en-US
+  $lang =~ s<\.[-_a-zA-Z0-9\.]*><>s;  # "en_US.ISO8859-1" -> en-US
+
+  return $lang if &is_language_tag($lang);
+
+  return;
+}
+
+###########################################################################
+
+=item * the function encode_language_tag($lang1)
+
+This function, if given a language tag, returns an encoding of it such
+that:
+
+* tags representing different languages never get the same encoding.
+
+* tags representing the same language always get the same encoding.
+
+* an encoding of a formally valid language tag always is a string
+value that is defined, has length, and is true if considered as a
+boolean.
+
+Note that the encoding itself is B<not> a formally valid language tag.
+Note also that you cannot, currently, go from an encoding back to a
+language tag that it's an encoding of.
+
+Note also that you B<must> consider the encoded value as atomic; i.e.,
+you should not consider it as anything but an opaque, unanalysable
+string value.  (The internals of the encoding method may change in
+future versions, as the language tagging standard changes over time.)
+
+C<encode_language_tag> returns undef if given anything other than a
+formally valid language tag.
+
+The reason C<encode_language_tag> exists is because different language
+tags may represent the same language; this is normally treatable with
+C<same_language_tag>, but consider this situation:
+
+You have a data file that expresses greetings in different languages.
+Its format is "[language tag]=[how to say 'Hello']", like:
+
+          en-US=Hiho
+          fr=Bonjour
+          i-mingo=Hau'
+
+And suppose you write a program that reads that file and then runs as
+a daemon, answering client requests that specify a language tag and
+then expect the string that says how to greet in that language.  So an
+interaction looks like:
+
+          greeting-client asks:    fr
+          greeting-server answers: Bonjour
+
+So far so good.  But suppose the way you're implementing this is:
+
+          my %greetings;
+          die unless open(IN, "<in.dat");
+          while(<IN>) {
+            chomp;
+            next unless /^([^=]+)=(.+)/s;
+            my($lang, $expr) = ($1, $2);
+            $greetings{$lang} = $expr;
+          }
+          close(IN);
+
+at which point %greetings has the contents:
+
+          "en-US"   => "Hiho"
+          "fr"      => "Bonjour"
+          "i-mingo" => "Hau'"
+
+And suppose then that you answer client requests for language $wanted
+by just looking up $greetings{$wanted}.
+
+If the client asks for "fr", that will look up successfully in
+%greetings, to the value "Bonjour".  And if the client asks for
+"i-mingo", that will look up successfully in %greetings, to the value
+"Hau'".
+
+But if the client asks for "i-Mingo" or "x-mingo", or "Fr", then the
+lookup in %greetings fails.  That's the Wrong Thing.
+
+You could instead do lookups on $wanted with:
+
+          use I18N::LangTags qw(same_language_tag);
+          my $repsonse = '';
+          foreach my $l2 (keys %greetings) {
+            if(same_language_tag($wanted, $l2)) {
+              $response = $greetings{$l2};
+              last;
+            }
+          }
+
+But that's rather inefficient.  A better way to do it is to start your
+program with:
+
+          use I18N::LangTags qw(encode_language_tag);
+          my %greetings;
+          die unless open(IN, "<in.dat");
+          while(<IN>) {
+            chomp;
+            next unless /^([^=]+)=(.+)/s;
+            my($lang, $expr) = ($1, $2);
+            $greetings{
+                        encode_language_tag($lang)
+                      } = $expr;
+          }
+          close(IN);
+
+and then just answer client requests for language $wanted by just
+looking up
+
+          $greetings{encode_language_tag($wanted)}
+
+And that does the Right Thing.
+
+=cut
+
+sub encode_language_tag {
+  # Only similarity_language_tag() is allowed to analyse encodings!
+
+  ## Changes in the language tagging standards may have to be reflected here.
+
+  # NB: (i-sil-...)?
+
+  my($tag) = uc($_[0]); # smash case
+  return undef unless &is_language_tag($tag);
+   # If it's not a language tag, its encoding is undef
+
+  $tag =~ s/^[xiXI]-//s;
+   # Just lop off any leading "x/i-"
+   # Or I suppose I could do s/^[xiXI]-/_/s or something.
+
+  return "~$tag";
+}
+
+#--------------------------------------------------------------------------
+
+=item * the function alternate_language_tags($lang1)
+
+This function, if given a language tag, returns all language tags that
+are alternate forms of this language tag.  (There is little
+alternation in the C<current> language tagging formalism, but
+extensions to the formalism are under consideration which could add a
+great deal of alternation.)
+
+Examples from the current formalism:
+
+          alternate_language_tags('en')           is   ()
+          alternate_language_tags('x-mingo-tom')  is   ('i-mingo-tom')
+          alternate_language_tags('x-klikitat')   is   ('i-klikitat')
+          alternate_language_tags('i-klikitat')   is   ('x-klikitat')
+
+This function returns undef if given anything other than a formally
+valid language tag.
+
+=cut
+
+my %alt = qw( i x   x i   I X   X I );
+sub alternate_language_tags {
+  ## Changes in the language tagging standards may have to be reflected here.
+  my $tag = $_[0];
+  return() unless &is_language_tag($tag);
+
+ # might as well preserve case
+
+  if($tag =~ /^([XIxi])(-.+)/) {
+    # This handles all the alternation that exists CURRENTLY
+    return($alt{$1} . $2);
+  }
+  return();
+}
+
+###########################################################################
+
 =back
 
-=head1 NOTE
+=head1 NOTE ABOUT FUTURE VERSIONS
 
-This library may (probably will) need ammending if/when RFC1766 is
-superceded.
+I B<will> need to change this library B<when> RFC1766 is superceded.
+Currently (1999-03-06) there are plans to do just that, by adding a
+whole series of B<three>-letter language codes like "nav" for Navajo
+-- which would currently be a formally B<in>valid language code.
+Be sure to check CPAN for updates of this library.
+
+=head1 ABOUT LOWERCASING
+
+I've considered making all the above functions that output language
+tags return all those tags strictly in lowercase.  Having all your
+language tags in lowercase does make some things easier.  But you
+might as well just lowercase as you like, or call
+C<encode_language_tag($lang1)> where appropriate.
+
+=head1 ABOUT UNICODE PLAINTEXT LANGUAGE TAGS
+
+In some future version of I18N::LangTags, I plan to include support
+for RFC2482-style language tags -- which are basically just normal
+language tags with their ASCII characters shifted into Plane 14.
 
 =head1 SEE ALSO
 
@@ -332,6 +573,9 @@ Character Sets and Languages".
 Value and Encoded Word Extensions: Character Sets, Languages, and
 Continuations".
 
+* RFC 2482, C<ftp://ftp.isi.edu/in-notes/rfc2482.txt>, 
+"Language Tagging in Unicode Plain Text".
+
 * Locale::Codes, in
 C<http://www.perl.com/CPAN/modules/by-module/Locale/>
 
@@ -343,14 +587,14 @@ C<ftp://ftp.isi.edu/in-notes/iana/assignments/languages/>
 
 =head1 COPYRIGHT
 
-Copyright (c) 1998 Sean M. Burke. All rights reserved.
+Copyright (c) 1998,1999 Sean M. Burke. All rights reserved.
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
 =head1 AUTHOR
 
-Sean M. Burke <sburke@netadventure.net>
+Sean M. Burke C<sburke@netadventure.net>
 
 =cut
 
