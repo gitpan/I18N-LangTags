@@ -1,5 +1,5 @@
 
-# Time-stamp: "2001-03-13 22:08:19 MST"
+# Time-stamp: "2001-05-25 07:36:55 MDT"
 # Sean M. Burke <sburke@cpan.org>
 
 require 5.000;
@@ -17,7 +17,7 @@ require Exporter;
                 encode_language_tag
                );
 
-$VERSION = "0.20";
+$VERSION = "0.21";
 
 =head1 NAME
 
@@ -121,14 +121,20 @@ what you want to feed it.
     returns:   ('It', 'in', 'fr')
   (So don't just feed it any old thing.)
 
+The output is untainted.  If you don't know what tainting is,
+don't worry about it.
+
 =cut
 
 sub extract_language_tags {
 
   ## Changes in the language tagging standards may have to be reflected here.
 
-  my($text) = $_[0];
-
+  my($text) =
+    $_[0] =~ m/(.+)/  # to make for an untainted result
+    ? $1 : ''
+  ;
+  
   return grep(!m/^[ixIX]$/s, # 'i' and 'x' aren't good tags
     $text =~ 
     m/
@@ -358,10 +364,16 @@ or undef in a scalar context.
 I'm not totally sure that locale names map satisfactorily to language
 tags.  Think REAL hard about how you use this.  YOU HAVE BEEN WARNED.
 
+The output is untainted.  If you don't know what tainting is,
+don't worry about it.
+
 =cut 
 
 sub locale2language_tag {
-  my $lang = $_[0];
+  my $lang =
+    $_[0] =~ m/(.+)/  # to make for an untainted result
+    ? $1 : ''
+  ;
 
   return $lang if &is_language_tag($lang); # like "en"
 

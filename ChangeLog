@@ -1,6 +1,14 @@
 Revision history for Perl module I18N::LangTags.
-                                        Time-stamp: "2001-03-13 22:47:36 MST"
+                                        Time-stamp: "2001-05-25 07:40:00 MDT"
 
+2001-05-25  Sean M. Burke  sburke@cpan.org
+
+	* Release 0.21
+
+	* extract_language_tags and locale2langauge_tag now
+	return untainted output.  Useful if you feed tainted
+	things, like $ENV{'LANG'}.
+	
 2001-03-13  Sean M. Burke  sburke@cpan.org
 
 	* Release 0.20
