@@ -3,12 +3,14 @@
 
 ######################### We start with some black magic to print on failure.
 require 5;
- # Time-stamp: "2001-06-20 01:43:31 MDT"
+ # Time-stamp: "2001-06-21 22:59:38 MDT"
 use strict;
 use Test;
 BEGIN { plan tests => 46 };
 BEGIN { ok 1 }
 use I18N::LangTags (':ALL');
+
+print "# Perl v$], I18N::LangTags v$I18N::LangTags::VERSION\n";
 
 ok !is_language_tag('');
 ok  is_language_tag('fr');
@@ -41,7 +43,9 @@ ok grep $_ eq 'es', panic_languages('it');
 ok grep $_ eq 'it', panic_languages('es');
 
 
-print "Now the ::List tests...\n";
+print "# Now the ::List tests...\n";
+print "# Perl v$], I18N::LangTags::List v$I18N::LangTags::List::VERSION\n";
+
 use I18N::LangTags::List;
 foreach my $lt (qw(
  en
@@ -66,14 +70,14 @@ foreach my $lt (qw(
   my $name = I18N::LangTags::List::name($lt);
   if($name) {
     ok(1);
-    print "        $lt -> $name\n";
+    print "#        $lt -> $name\n";
   } else {
     ok(0);
-    print "        Failed lookup on $lt\n";
+    print "#        Failed lookup on $lt\n";
   }
 }
 
 
 
-print "So there!\n";
+print "# So there!\n";
 
