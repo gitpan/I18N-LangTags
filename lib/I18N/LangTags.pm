@@ -1,5 +1,5 @@
 
-# Time-stamp: "2004-10-06 23:26:33 ADT"
+# Time-stamp: "2004-10-06 23:19:57 ADT"
 # Sean M. Burke <sburke@cpan.org>
 
 require 5.000;
@@ -19,7 +19,7 @@ require Exporter;
                );
 %EXPORT_TAGS = ('ALL' => \@EXPORT_OK);
 
-$VERSION = "0.35";
+$VERSION = "0.34";
 
 sub uniq { my %seen; return grep(!($seen{$_}++), @_); } # a util function
 
