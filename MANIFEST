@@ -1,9 +1,16 @@
 ChangeLog
+lib/I18N/LangTags.pm
+lib/I18N/LangTags/Detect.pm
+lib/I18N/LangTags/List.pm
+Makefile.PL
 MANIFEST
 MANIFEST.SKIP
-Makefile.PL
 README
-lib/I18N/LangTags.pm
-lib/I18N/LangTags/List.pm
-t/01test.t
-t/02decency.t
+t/01_about_verbose.t
+t/05_main.t
+t/07_listy.t
+t/10_http.t
+t/50_super.t
+t/55_supers_strict.t
+t/80_all_env.t
+META.yml                                 Module meta-data (added by MakeMaker)

@@ -1,5 +1,5 @@
 use ExtUtils::MakeMaker;
-# Time-stamp: "2003-10-10 17:04:25 ADT"
+# Time-stamp: "2004-03-30 21:38:40 AST"
 #
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
@@ -10,6 +10,11 @@ WriteMakefile(
     'ABSTRACT_FROM' => 'lib/I18N/LangTags.pm', # 
     'dist'        => { COMPRESS => 'gzip -6f', SUFFIX => 'gz', },
     
+   'PREREQ_PM'    => {	
+                         $^O =~ m/Win32/i ? (
+			    'Win32::Locale' => 0.01,
+					   ) : (),
+	             },
     (($] >= 5.007003) ?
      ('INSTALLDIRS' => 'perl') : ()),
 
