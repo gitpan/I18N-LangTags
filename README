@@ -1,5 +1,5 @@
 README for I18N::LangTags
-                                        Time-stamp: "1998-10-31 14:07:30 MST"
+                                        Time-stamp: "1998-12-15 00:03:44 MST"
 
 			    I18N::LangTags
 
@@ -19,6 +19,7 @@ The functions it currently provides are:
 	same_language_tag($lang1, $lang2)
 	similarity_language_tag($lang1, $lang2)
 	is_dialect_of($lang1, $lang2)
+        super_languages($lang1)
 
 See the POD for more information.
 

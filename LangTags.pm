@@ -1,5 +1,5 @@
 #
-# Time-stamp: "1998-10-31 14:36:43 MST"
+# Time-stamp: "1998-12-15 00:15:05 MST"
 # Sean M. Burke <sburke@netadventure.net>
 #
 ###########################################################################
@@ -13,10 +13,10 @@ $Debug = 0;
 @ISA = qw(Exporter);
 @EXPORT = qw();
 @EXPORT_OK = qw(is_language_tag same_language_tag
-                extract_language_tags
+                extract_language_tags super_languages
                 similarity_language_tag is_dialect_of);
 
-$VERSION = "0.08";
+$VERSION = "0.09";
 
 =head1 NAME
 
@@ -25,10 +25,10 @@ I18N::LangTags - functions for dealing with RFC1766-style language tags
 =head1 SYNOPSIS
 
     use I18N::LangTags qw(is_language_tag same_language_tag
-                          extract_language_tags
+                          extract_language_tags super_languages
                           similarity_language_tag is_dialect_of);
 
-...or whatever of those function you want to import.  Those are
+...or whatever of those functions you want to import.  Those are
 all the exportable functions -- you're free to import only some,
 or none at all.  By default, none are imported.
 
@@ -262,6 +262,53 @@ sub is_dialect_of {
   $lang2 .= '-';
   return
     (substr($lang1, 0, length($lang2)) eq $lang2) ? 1 : 0;
+}
+
+###########################################################################
+
+=item * the function super_languages($lang1)
+
+Returns a list of language tags that are superordinate tags to $lang1
+-- it gets this by removing subtags from the end of $lang1 until
+nothing (or just "i" or "x") is left.
+
+   super_languages("fr-CA-joual")  is  ("fr-CA", "fr")
+
+   super_languages("en-AU")  is  ("en")
+
+   super_languages("en")  is  empty-list, ()
+
+   super_languages("i-cherokee")  is  empty-list, ()
+    ...not ("i"), which would be illegal as well as pointless.
+
+Returns empty-list if $lang1 is not a valid language tag.
+
+A notable and rather unavoidable problem with this method:
+"x-mingo-tom" has an "x" because the whole tag isn't an
+IANA-registered tag -- but super_languages('x-mingo-tom') is
+('x-mmingo') -- which isn't really right, since 'i-mingo' is
+registered.  But this module has no way of knowing that.  (But note
+that same_language_tag('x-mingo', 'i-mingo') is TRUE.)
+
+More importantly, you assume I<at your peril> that superordinates of
+$lang1 are mutually intelligible with $lang1.  Think REAL hard about
+how you use this.  YOU HAVE BEEN WARNED.
+
+=cut 
+
+sub super_languages {
+  my $lang1 = $_[0];
+  return() unless defined($lang1) && &is_language_tag($lang1);
+  my @l1_subtags = split('-', $lang1);
+
+  my @supers = ();
+  foreach my $bit (@l1_subtags) {
+    push @supers, 
+      scalar(@supers) ? ($supers[-1] . '-' . $bit) : $bit;
+  }
+  pop @supers if @supers;
+  shift @supers if @supers && $supers[0] =~ m<^[iIxX]$>s;
+  return reverse @supers;
 }
 
 ###########################################################################
