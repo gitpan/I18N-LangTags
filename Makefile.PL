@@ -3,7 +3,7 @@ use ExtUtils::MakeMaker;
 # the contents of the Makefile that is written.
 WriteMakefile(
     'NAME'	=> 'I18N::LangTags',
-    'VERSION_FROM' => 'LangTags.pm', # finds $VERSION
+    'VERSION_FROM' => 'lib/I18N/LangTags.pm', # finds $VERSION
     'dist'        => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
 );
 

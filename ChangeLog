@@ -1,6 +1,13 @@
 Revision history for Perl module I18N::LangTags.
-                                        Time-stamp: "2001-05-25 07:40:00 MDT"
+                                        Time-stamp: "2001-05-27 19:51:27 MDT"
 
+2001-05-27  Sean M. Burke  sburke@cpan.org
+
+	* Release 0.22
+        
+	* Now bundling I18N::LangTags::List, a reference for lang tags,
+	replacing generate_language_table.plx and language_codes.txt
+	
 2001-05-25  Sean M. Burke  sburke@cpan.org
 
 	* Release 0.21
