@@ -1,6 +1,6 @@
 ChangeLog
 lib/I18N/LangTags.pm
-lib/I18N/LangTags/List.pod
+lib/I18N/LangTags/List.pm
 MANIFEST
 Makefile.PL
 README

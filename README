@@ -1,5 +1,5 @@
 README for I18N::LangTags
-                                        Time-stamp: "2001-05-27 19:57:17 MDT"
+                                        Time-stamp: "2001-05-29 21:52:15 MDT"
 
 			    I18N::LangTags
 
@@ -15,13 +15,21 @@ tags (notably the extraction of them, comparing them, and testing the
 formal validity of them) as is needed in a variety of protocols and
 applications.
 
+
+I18N::LangTags::List -- tags and names for human languages.  This
+module goes from known language tag names ("fr-CA") to their English
+names ("Canadian French").  Its documentation also lists the several
+hundred known tags and some common subforms.  You may find this useful
+as a reference.
+
+
 See the POD for more information.
 
 
 INSTALLATION
 
-You install I18N::LangTags, as you would install any perl module
-library, by running these commands:
+You install I18N::LangTags and I18N::LangTags::List, as you would
+install any perl module library, by running these commands:
 
    perl Makefile.PL
    make

@@ -1,5 +1,5 @@
 
-# Time-stamp: "2001-05-27 19:53:11 MDT"
+# Time-stamp: "2001-05-29 21:47:07 MDT"
 # Sean M. Burke <sburke@cpan.org>
 
 require 5.000;
@@ -8,6 +8,7 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $VERSION); # $Debug
 require Exporter;
 # $Debug = 0;
+$VERSION = "0.23";
 @ISA = qw(Exporter);
 @EXPORT = qw();
 @EXPORT_OK = qw(is_language_tag same_language_tag
@@ -17,7 +18,6 @@ require Exporter;
                 encode_language_tag
                );
 
-$VERSION = "0.22";
 
 =head1 NAME
 

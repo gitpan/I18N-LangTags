@@ -3,10 +3,10 @@
 
 ######################### We start with some black magic to print on failure.
 require 5;
- # Time-stamp: "2001-03-13 22:43:03 MST"
+ # Time-stamp: "2001-05-29 21:58:38 MDT"
 use strict;
 use Test;
-BEGIN { plan tests => 23 };
+BEGIN { plan tests => 41 };
 BEGIN { ok 1 }
 use I18N::LangTags qw(is_language_tag same_language_tag
 		      extract_language_tags super_languages
@@ -38,6 +38,40 @@ ok 0 == similarity_language_tag('en-ca', 'fr-ca');
 ok 1 == similarity_language_tag('en-ca', 'en-us');
 ok 2 == similarity_language_tag('en-us-southern', 'en-us-western');
 ok 2 == similarity_language_tag('en-us-southern', 'en-us');
+
+print "Now the ::List tests...\n";
+use I18N::LangTags::List;
+foreach my $lt (qw(
+ en
+ en-us
+ en-kr
+ el
+ elx
+ i-mingo
+ i-mingo-tom
+ x-mingo-tom
+ it
+ it-it
+ it-IT
+ it-FR
+ yi
+ ji
+ cre-syllabic
+ cre-syllabic-western
+ cre-western
+ cre-latin
+)) {
+  my $name = I18N::LangTags::List::name($lt);
+  if($name) {
+    ok(1);
+    print "        $lt -> $name\n";
+  } else {
+    ok(0);
+    print "        Failed lookup on $lt\n";
+  }
+}
+
+
 
 print "So there!\n";
 
