@@ -10,6 +10,7 @@ t/01_about_verbose.t
 t/05_main.t
 t/07_listy.t
 t/10_http.t
+t/20_locales.t
 t/50_super.t
 t/55_supers_strict.t
 t/80_all_env.t
