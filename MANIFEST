@@ -1,8 +1,8 @@
 ChangeLog
-lib/I18N/LangTags.pm
-lib/I18N/LangTags/List.pm
 MANIFEST
+MANIFEST.SKIP
 Makefile.PL
 README
-test.pl
-rfc3066.txt
+lib/I18N/LangTags.pm
+lib/I18N/LangTags/List.pm
+t/01test.t

@@ -4,7 +4,8 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     'NAME'	=> 'I18N::LangTags',
     'VERSION_FROM' => 'lib/I18N/LangTags.pm', # finds $VERSION
-    'dist'        => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
+    'ABSTRACT_FROM' => 'lib/I18N/LangTags.pm', # 
+    'dist'        => { COMPRESS => 'gzip -6f', SUFFIX => 'gz', },
 );
 
 package MY;
