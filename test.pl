@@ -2,19 +2,42 @@
 # `make test'. After `make install' it should work as `perl test.pl'
 
 ######################### We start with some black magic to print on failure.
+require 5;
+ # Time-stamp: "2001-03-13 22:43:03 MST"
+use strict;
+use Test;
+BEGIN { plan tests => 23 };
+BEGIN { ok 1 }
+use I18N::LangTags qw(is_language_tag same_language_tag
+		      extract_language_tags super_languages
+		      similarity_language_tag is_dialect_of
+		      locale2language_tag alternate_language_tags
+		      encode_language_tag
+		     );
 
-# Change 1..1 below to 1..last_test_to_print .
-# (It may become useful if the test is moved to ./t subdirectory.)
+ok !is_language_tag('');
+ok  is_language_tag('fr');
+ok  is_language_tag('fr-ca');
+ok  is_language_tag('fr-CA');
+ok !is_language_tag('fr-CA-');
+ok !is_language_tag('fr_CA');
+ok  is_language_tag('fr-ca-joual');
+ok !is_language_tag('frca');
+ok  is_language_tag('nav');
+ok  is_language_tag('nav-shiprock');
+ok !is_language_tag('nav-ceremonial'); # subtag too long
+ok !is_language_tag('x');
+ok !is_language_tag('i');
+ok  is_language_tag('i-borg'); # NB: fictitious tag
+ok  is_language_tag('x-borg');
+ok  is_language_tag('x-borg-prot5123');
+ok  same_language_tag('x-borg-prot5123', 'i-BORG-Prot5123' );
+ok !same_language_tag('en', 'en-us' );
 
-BEGIN { $| = 1; print "1..1\n"; }
-END {print "not ok 1\n" unless $loaded;}
-use I18N::LangTags;
-$loaded = 1;
-print "ok 1\n";
+ok 0 == similarity_language_tag('en-ca', 'fr-ca');
+ok 1 == similarity_language_tag('en-ca', 'en-us');
+ok 2 == similarity_language_tag('en-us-southern', 'en-us-western');
+ok 2 == similarity_language_tag('en-us-southern', 'en-us');
 
-######################### End of black magic.
-
-# Insert your test code below (better if it prints "ok 13"
-# (correspondingly "not ok 13") depending on the success of chunk 13
-# of the test code):
+print "So there!\n";
 

@@ -1,24 +1,28 @@
 Revision history for Perl module I18N::LangTags.
-                                        Time-stamp: "2000-05-13 22:18:14 MDT"
+                                        Time-stamp: "2001-03-13 22:47:36 MST"
 
-1998-04-02 Sean M. Burke  sburke@netadventure.net
+2001-03-13  Sean M. Burke  sburke@cpan.org
 
-	* Release 0.07
+	* Release 0.20
 
-	* First public release.
+	* Added support for RFC 3066 tags: allowing three-letter primary
+	tags ("nav"), and allowing digits in subtags ("x-borg-prot3252").
 
-1998-10-31  Sean M. Burke  sburke@netadventure.net
+	* Changed all references from RFC 1766 to RFC 3066.
 
-	* Release 0.08
+	* Now bundling fulltext of RFC 3066 in the dist.
 
-	* Just changes in the docs and bundle -- no change
-	in functionality.
+	* Now bundling generate_language_table.plx and language_codes.txt
+	
+	* Added some nice tests to test.pl
 
-1998-12-14  Sean M. Burke  sburke@netadventure.net
+	* Inverting order of listings in this ChangeLog file.
 
-	* Release 0.09
+2000-05-13  Sean M. Burke  sburke@cpan.org
 
-	* Added function super_languages()
+	* Release 0.13
+
+	* Just noting my new email address.
 
 1999-03-06  Sean M. Burke  sburke@netadventure.net
 
@@ -29,8 +33,23 @@ Revision history for Perl module I18N::LangTags.
 	  locale2language_tag, alternate_language_tags, and
 	  encode_language_tag
 
-2000-05-13  Sean M. Burke  sburke@cpan.org
+1998-12-14  Sean M. Burke  sburke@netadventure.net
 
-	* Release 0.13
+	* Release 0.09
 
-	* Just noting my new email address.
+	* Added function super_languages()
+
+1998-10-31  Sean M. Burke  sburke@netadventure.net
+
+	* Release 0.08
+
+	* Just changes in the docs and bundle -- no change
+	in functionality.
+
+1998-04-02 Sean M. Burke  sburke@netadventure.net
+
+	* Release 0.07
+
+	* First public release.
+
+[END OF CHANGELOG]

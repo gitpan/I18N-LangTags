@@ -1,13 +1,13 @@
 
-# Time-stamp: "2000-05-13 22:12:55 MDT"
+# Time-stamp: "2001-03-13 22:08:19 MST"
 # Sean M. Burke <sburke@cpan.org>
 
 require 5.000;
 package I18N::LangTags;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $Debug $VERSION);
+use vars qw(@ISA @EXPORT @EXPORT_OK $VERSION); # $Debug
 require Exporter;
-$Debug = 0;
+# $Debug = 0;
 @ISA = qw(Exporter);
 @EXPORT = qw();
 @EXPORT_OK = qw(is_language_tag same_language_tag
@@ -17,11 +17,11 @@ $Debug = 0;
                 encode_language_tag
                );
 
-$VERSION = "0.13";
+$VERSION = "0.20";
 
 =head1 NAME
 
-I18N::LangTags - functions for dealing with RFC1766-style language tags
+I18N::LangTags - functions for dealing with RFC3066-style language tags
 
 =head1 SYNOPSIS
 
@@ -41,9 +41,9 @@ in front of all the function names in the following examples.
 
 =head1 DESCRIPTION
 
-Language tags are a formalism, described in RFC 1766, for declaring
-what language form (language and possibly dialect) a given chunk of
-information is in.
+Language tags are a formalism, described in RFC 3066 (obsoleting
+1766), for declaring what language form (language and possibly
+dialect) a given chunk of information is in.
 
 This library provides functions for common tasks involving language
 tags as they are needed in a variety of protocols and applications.
@@ -65,6 +65,9 @@ Returns true iff $lang1 is a formally valid language tag.
    is_language_tag("x-jicarilla")   is FALSE
        (Subtags can be 8 chars long at most -- 'jicarilla' is 9)
 
+   is_language_tag("sgn-US")    is TRUE
+       (That's American Sign Language)
+
    is_language_tag("i-Klikitat")    is TRUE
        (True without regard to the fact noone has actually
         registered Klikitat -- it's a formally valid tag)
@@ -75,7 +78,10 @@ Returns true iff $lang1 is a formally valid language tag.
    is_language_tag("Spanish")       is FALSE
    is_language_tag("french-patois") is FALSE
        (No good -- first subtag has to match
-        /^([xXiI]|[a-zA-Z]{2})$/ -- see RFC1766)
+        /^([xXiI]|[a-zA-Z]{2,3})$/ -- see RFC3066)
+
+   is_language_tag("x-borg-prot2532") is TRUE
+       (Yes, subtags can contain digits, as of RFC3066)
 
 =cut
 
@@ -91,11 +97,11 @@ sub is_language_tag {
 
   return $tag =~ 
     /^(?:  # First subtag
-         [xi] | [a-z]{2}
+         [xi] | [a-z]{2,3}
       )
       (?:  # Subtags thereafter
          -           # separator
-         [a-z]{1,8}  # subtag  
+         [a-z0-9]{1,8}  # subtag  
       )*
     $/xs ? 1 : 0;
 }
@@ -128,11 +134,11 @@ sub extract_language_tags {
     m/
       \b
       (?:  # First subtag
-         [iIxX] | [a-zA-Z]{2}
+         [iIxX] | [a-zA-Z]{2,3}
       )
       (?:  # Subtags thereafter
          -           # separator
-         [a-zA-Z]{1,8}  # subtag  
+         [a-zA-Z0-9]{1,8}  # subtag  
       )*
       \b
     /xsg
@@ -210,7 +216,7 @@ sub similarity_language_tag {
   my $lang1 = &encode_language_tag($_[0]);
   my $lang2 = &encode_language_tag($_[1]);
 
-  # NB: (i-sil-...)?
+  # NB: (i-sil-...)?  (i-sgn-...)?
 
   return undef if !defined($lang1) and !defined($lang2);
   return 0 if !defined($lang1) or !defined($lang2);
@@ -483,8 +489,6 @@ sub encode_language_tag {
 
   ## Changes in the language tagging standards may have to be reflected here.
 
-  # NB: (i-sil-...)?
-
   my($tag) = uc($_[0]); # smash case
   return undef unless &is_language_tag($tag);
    # If it's not a language tag, its encoding is undef
@@ -537,14 +541,6 @@ sub alternate_language_tags {
 
 =back
 
-=head1 NOTE ABOUT FUTURE VERSIONS
-
-I B<will> need to change this library B<when> RFC1766 is superceded.
-Currently (1999-03-06) there are plans to do just that, by adding a
-whole series of B<three>-letter language codes like "nav" for Navajo
--- which would currently be a formally B<in>valid language code.
-Be sure to check CPAN for updates of this library.
-
 =head1 ABOUT LOWERCASING
 
 I've considered making all the above functions that output language
@@ -561,8 +557,8 @@ language tags with their ASCII characters shifted into Plane 14.
 
 =head1 SEE ALSO
 
-* RFC 1766, C<ftp://ftp.isi.edu/in-notes/rfc1766.txt>, "Tags for the
-Identification of Languages".
+* RFC 3066, C<ftp://ftp.isi.edu/in-notes/rfc3066.txt>, "Tags for the
+Identification of Languages".  (Obsoletes RFC 1766)
 
 * RFC 2277, C<ftp://ftp.isi.edu/in-notes/rfc2277.txt>, "IETF Policy on
 Character Sets and Languages".
@@ -580,15 +576,24 @@ C<http://www.perl.com/CPAN/modules/by-module/Locale/>
 * ISO 639, "Code for the representation of names of languages",
 C<http://www.indigo.ie/egt/standards/iso639/iso639-1-en.html>
 
+* ISO 639-2, "Codes for the representation of names of languages",
+including three-letter codes,
+C<http://lcweb.loc.gov/standards/iso639-2/bibcodes.html>
+
 * The IANA list of registered languages (hopefully up-to-date),
 C<ftp://ftp.isi.edu/in-notes/iana/assignments/languages/>
 
 =head1 COPYRIGHT
 
-Copyright (c) 1998,1999,2000 Sean M. Burke. All rights reserved.
+Copyright (c) 1998-2001 Sean M. Burke. All rights reserved.
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
+
+The programs and documentation in this dist are distributed in
+the hope that they will be useful, but without any warranty; without
+even the implied warranty of merchantability or fitness for a
+particular purpose.
 
 =head1 AUTHOR
 

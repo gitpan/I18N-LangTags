@@ -4,3 +4,6 @@ MANIFEST
 Makefile.PL
 README
 test.pl
+rfc3066.txt
+generate_language_table.plx
+language_codes.txt

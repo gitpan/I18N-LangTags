@@ -1,14 +1,14 @@
 README for I18N::LangTags
-                                        Time-stamp: "2000-05-13 22:14:23 MDT"
+                                        Time-stamp: "2001-03-13 22:05:49 MST"
 
 			    I18N::LangTags
 
-I18N::LangTags - functions for dealing with RFC1766-style language
+I18N::LangTags - functions for dealing with RFC3066-style language
 tags
 
-Language tags are a formalism, described in RFC 1766, for declaring
-what language form (language and possibly dialect) a given chunk of
-information is in.
+Language tags are a formalism, described in RFC 3066 (obsoleting
+1766), for declaring what language form (language and possibly
+dialect) a given chunk of information is in.
 
 This library provides functions for common tasks involving language
 tags (notably the extraction of them, comparing them, and testing the
@@ -34,6 +34,8 @@ something like this command:
 
   perl Makefile.PL LIB=~/perl
 
+See perldoc perlmodinstall for more information on installing modules.
+
 
 DOCUMENTATION
 
@@ -56,8 +58,13 @@ Comprehensive Perl Archive Network (CPAN).  Visit
 
 COPYRIGHT
 
-Copyright 1998-2000, Sean M. Burke <sburke@cpan.org>, all rights
+Copyright 1998-2001, Sean M. Burke <sburke@cpan.org>, all rights
 reserved.
+
+The programs and documentation in this dist are distributed in
+the hope that they will be useful, but without any warranty; without
+even the implied warranty of merchantability or fitness for a
+particular purpose.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
